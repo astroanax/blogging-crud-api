@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import mongoose from 'mongoose';
 
 // creating a schema for strings
 const UserCreate = z.object({
@@ -13,9 +14,16 @@ const UserCreate = z.object({
         .regex(/(?=^(?=.{3,24}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$)(?=(?!^d+$)^.+$)/),
     email: z.string().email(),
     // see https://stackoverflow.com/a/21456918/13213725
-    //password: z.string().regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*d)(?=.*[@$!%*?&])[A-Za-zd@$!%*?&]{8,20}$/),
-    password: z.string(),
+    password: z.string().regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/),
     name: z.string().min(3).max(30)
 });
 
-export default UserCreate;
+const UserCreateRead = z.object({
+    _id: z.custom<mongoose.Types.ObjectId>(),
+    username: z.string(),
+    email: z.string().email(),
+    name: z.string().min(3).max(30),
+    createdAt: z.date()
+});
+
+export default { UserCreate, UserCreateRead };

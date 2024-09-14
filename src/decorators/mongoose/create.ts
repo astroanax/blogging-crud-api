@@ -14,7 +14,7 @@ export function MongoCreate(model: Model<any>) {
 
                 await document.save();
 
-                req.mongoCreate = document;
+                res.locals.mongoCreate = document;
             } catch (error: any) {
                 if (error.name === 'MongoServerError' && error.code === 11000) {
                     logging.error('duplicate key error');
