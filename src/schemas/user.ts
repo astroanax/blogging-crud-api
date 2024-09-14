@@ -26,6 +26,6 @@ const Read = z.object({
     createdAt: z.date()
 });
 
-const Reads = z.array(Read);
+const Update = Create.omit({ password: true }).partial();
 
-export default { Create, Read, Reads };
+export default { Create, Read, Update };

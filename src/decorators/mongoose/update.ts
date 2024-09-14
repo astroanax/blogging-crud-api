@@ -17,7 +17,7 @@ export function MongoUpdate(model: Model<any>) {
 
                 await document.save();
 
-                req.mongoUpdate = document;
+                res.locals.data = document;
             } catch (error) {
                 logging.error(error);
 

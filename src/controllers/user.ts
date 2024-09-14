@@ -17,8 +17,6 @@ class UserController {
     @MongoGetAll(User)
     @ValidateOut(UserSchema.Read, true)
     getAll(req: Request, res: Response, next: NextFunction) {
-        logging.error('1111111111111111111111111111111111');
-        logging.error(res.locals.data);
         return res.status(200).json(res.locals.data);
     }
 
@@ -44,15 +42,17 @@ class UserController {
     }
 
     @Route('patch', '/update/:id')
+    @Validate(UserSchema.Update)
     @MongoUpdate(User)
+    @ValidateOut(UserSchema.Read, false)
     update(req: Request, res: Response, next: NextFunction) {
-        return res.status(201).json(req.mongoUpdate);
+        return res.status(201).json(res.locals.data);
     }
 
     @Route('delete', '/delete/:id')
     @MongoDelete(User)
     remove(req: Request, res: Response, next: NextFunction) {
-        return res.status(201).json({ message: 'Deleted' });
+        return res.status(204).json({});
     }
 }
 
