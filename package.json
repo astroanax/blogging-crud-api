@@ -4,9 +4,9 @@
     "description": "A simple CRUD API for a blogging website (tathva tech team induction submission)",
     "main": "src/server.ts",
     "scripts": {
-	"start": "tsc && node build/server.js",
-	"format": "prettier -w src",
-	"lint": "eslint src",
+        "start": "tsc && node build/server.js",
+        "format": "prettier -w src",
+        "lint": "eslint src",
         "build": "tsc"
     },
     "keywords": [
@@ -14,14 +14,15 @@
         "typescript",
         "express",
         "routing",
-	"mongoose",
-	"mongodb"
+        "mongoose",
+        "mongodb"
     ],
     "author": "Mohammed Rehan Tadpatri",
     "license": "AGPL-3.0-or-later",
     "devDependencies": {
         "@types/express": "^4.17.21",
         "@types/node": "^22.5.5",
+        "prettier": "^3.3.3",
         "ts-node": "^10.9.2",
         "typescript": "^5.6.2"
     },
