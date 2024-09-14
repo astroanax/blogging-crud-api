@@ -1,8 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
 import { Controller } from '../decorators/controller';
 import { Route } from '../decorators/route';
-import { MongoGet } from '../decorators/mongoose/get';
+import { Validate } from '../decorators/validate';
+import UserCreate from '../schemas/user';
 import { User } from '../models/user';
+import { MongoGet } from '../decorators/mongoose/get';
 import { MongoGetAll } from '../decorators/mongoose/getAll';
 import { MongoDelete } from '../decorators/mongoose/delete';
 import { MongoQuery } from '../decorators/mongoose/query';
@@ -24,6 +26,7 @@ class UserController {
     }
 
     @Route('post', '/create')
+    @Validate(UserCreate)
     @MongoCreate(User)
     create(req: Request, res: Response, next: NextFunction) {
         return res.status(201).json(req.mongoCreate);
