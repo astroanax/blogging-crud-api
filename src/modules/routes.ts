@@ -7,8 +7,6 @@ export function defineRoutes(controllers: any, application: Express) {
         const controllerPath: String = Reflect.getMetadata('baseRoute', controller.constructor);
         const methods = Array.from(routeHandlers.keys());
 
-        logging.log('--------------------------------------------------');
-
         for (let j = 0; j < methods.length; j++) {
             const method = methods[j];
             const routes = routeHandlers.get(method as keyof Express);
@@ -20,12 +18,10 @@ export function defineRoutes(controllers: any, application: Express) {
 
                     if (handlers) {
                         application[method as keyof Express](controllerPath + routeNames[k], handlers);
-                        logging.log('Loading route:', method, controllerPath + routeNames[k]);
+                        logging.log('loading route -', method, controllerPath + routeNames[k]);
                     }
                 }
             }
         }
-
-        logging.log('--------------------------------------------------');
     }
 }
