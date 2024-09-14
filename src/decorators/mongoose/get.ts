@@ -10,7 +10,7 @@ export function MongoGet(model: Model<any>) {
                 const document = await model.findById(req.params.id);
 
                 if (document) {
-                    req.mongoGet = document;
+                    res.locals.data = document;
                 } else {
                     return res.status(400).json({ error: 'Not found' });
                 }

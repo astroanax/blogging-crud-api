@@ -8,7 +8,7 @@ export function MongoGetAll(model: Model<any>) {
         descriptor.value = async function (req: Request, res: Response, next: NextFunction) {
             try {
                 const documents = await model.find();
-                req.mongoGetAll = documents;
+                res.locals.data = documents;
             } catch (error) {
                 logging.error(error);
 

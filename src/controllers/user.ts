@@ -15,22 +15,26 @@ import { MongoCreate } from '../decorators/mongoose/create';
 class UserController {
     @Route('get', '/get/all')
     @MongoGetAll(User)
+    @ValidateOut(UserSchema.Read, true)
     getAll(req: Request, res: Response, next: NextFunction) {
-        return res.status(200).json(req.mongoGetAll);
+        logging.error('1111111111111111111111111111111111');
+        logging.error(res.locals.data);
+        return res.status(200).json(res.locals.data);
     }
 
     @Route('get', '/get/:id')
     @MongoGet(User)
+    @ValidateOut(UserSchema.Read, false)
     get(req: Request, res: Response, next: NextFunction) {
-        return res.status(200).json(req.mongoGet);
+        return res.status(200).json(res.locals.data);
     }
 
     @Route('post', '/create')
-    @Validate(UserSchema.UserCreate)
+    @Validate(UserSchema.Create)
     @MongoCreate(User)
-    @ValidateOut(UserSchema.UserCreateRead)
+    @ValidateOut(UserSchema.Read, false)
     create(req: Request, res: Response, next: NextFunction) {
-        return res.status(201).json(res.locals.mongoCreate);
+        return res.status(201).json(res.locals.data);
     }
 
     @Route('post', '/query')

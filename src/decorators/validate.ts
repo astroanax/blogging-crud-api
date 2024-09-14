@@ -20,14 +20,26 @@ export function Validate<T = any>(schema: any) {
     };
 }
 
-export function ValidateOut<T = any>(schema: any) {
+export function ValidateOut<T = any>(schema: any, array: boolean) {
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
         const originalMethod = descriptor.value;
         descriptor.value = async function (req: Request, res: Response, next: NextFunction) {
             try {
-                const parsed = await schema.parseAsync(res.locals.mongoCreate);
-                const filteredData = _.pick(parsed, Object.keys(schema.shape));
-                res.locals.mongoCreate = filteredData;
+                if (!array) {
+                    const parsed = await schema.parseAsync(res.locals.data);
+                    const filteredData = _.pick(parsed, Object.keys(schema.shape));
+                    res.locals.data = filteredData;
+                } else {
+                    const filteredData = await Promise.all(
+                        res.locals.data.map(async (item: any) => {
+                            const parsed = await schema.parseAsync(item);
+                            _.pick(item, Object.keys(schema.shape));
+                            const filtered = _.pick(item, Object.keys(schema.shape));
+                            return filtered;
+                        })
+                    );
+                    res.locals.data = filteredData;
+                }
             } catch (error: any) {
                 logging.error('response validation error :( !!');
                 logging.error(error);

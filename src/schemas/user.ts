@@ -2,7 +2,7 @@ import { z } from 'zod';
 import mongoose from 'mongoose';
 
 // creating a schema for strings
-const UserCreate = z.object({
+const Create = z.object({
     // see https://stackoverflow.com/a/12019115/13213725
     // username must be 3 to 24 chars long and can only contain alphanumeric chars, dots and underscores
     // see https://stackoverflow.com/a/3831442/13213725
@@ -18,7 +18,7 @@ const UserCreate = z.object({
     name: z.string().min(3).max(30)
 });
 
-const UserCreateRead = z.object({
+const Read = z.object({
     _id: z.custom<mongoose.Types.ObjectId>(),
     username: z.string(),
     email: z.string().email(),
@@ -26,4 +26,6 @@ const UserCreateRead = z.object({
     createdAt: z.date()
 });
 
-export default { UserCreate, UserCreateRead };
+const Reads = z.array(Read);
+
+export default { Create, Read, Reads };
