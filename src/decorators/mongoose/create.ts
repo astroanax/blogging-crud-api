@@ -15,10 +15,14 @@ export function MongoCreate(model: Model<any>) {
                 await document.save();
 
                 req.mongoCreate = document;
-            } catch (error) {
-                logging.error(error);
-
-                return res.status(400).json(error);
+            } catch (error: any) {
+                if (error.name === 'MongoServerError' && error.code === 11000) {
+                    logging.error('duplicate key error');
+                    return res.status(422).json(error);
+                } else {
+                    logging.error('unknown error: ', error);
+                    return res.status(500).json(error);
+                }
             }
 
             return originalMethod.call(this, req, res, next);
