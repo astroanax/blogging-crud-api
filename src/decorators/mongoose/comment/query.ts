@@ -1,14 +1,14 @@
 import { Request, Response, NextFunction } from 'express';
 import { Model } from 'mongoose';
 
-export function MongoGetAll(model: Model<any>) {
+export function MongoQuery(model: Model<any>) {
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
         const originalMethod = descriptor.value;
 
         descriptor.value = async function (req: Request, res: Response, next: NextFunction) {
             try {
-                const documents = await model.find().populate('author');
-                res.locals.data = documents;
+                const documents = await model.find({ ...req.body });
+                req.mongoQuery = documents;
             } catch (error) {
                 logging.error(error);
 

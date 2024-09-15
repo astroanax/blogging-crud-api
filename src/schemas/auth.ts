@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import mongoose from 'mongoose';
 
 const Login = z.object({
     username: z.string().min(3).max(20),

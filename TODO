@@ -3,3 +3,6 @@
 * [DONE]use proper types for auth requests
 * [PARTIAL]implement api for blogs posts
 * write openapi/swagger config
+* relationships
+* cli for managing posts and users
+* aggregation pipelines

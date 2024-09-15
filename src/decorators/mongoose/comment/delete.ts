@@ -1,14 +1,15 @@
 import { Request, Response, NextFunction } from 'express';
 import { Model } from 'mongoose';
 
-export function MongoGetAll(model: Model<any>) {
+export function MongoCommentDelete(model: Model<any>) {
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
         const originalMethod = descriptor.value;
 
         descriptor.value = async function (req: Request, res: Response, next: NextFunction) {
             try {
-                const documents = await model.find().populate('author');
-                res.locals.data = documents;
+                const document = await model.findOneAndDelete({ _id: req.params.comment_id, author: req.auth?._id, blog: req.params.id });
+
+                if (!document) return res.sendStatus(404);
             } catch (error) {
                 logging.error(error);
 

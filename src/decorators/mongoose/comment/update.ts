@@ -1,14 +1,23 @@
 import { Request, Response, NextFunction } from 'express';
 import { Model } from 'mongoose';
 
-export function MongoGetAll(model: Model<any>) {
+export function MongoCommentUpdate(model: Model<any>) {
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
         const originalMethod = descriptor.value;
 
         descriptor.value = async function (req: Request, res: Response, next: NextFunction) {
             try {
-                const documents = await model.find().populate('author');
-                res.locals.data = documents;
+                const document = await model.findOne({ _id: req.params.comment_id, author: req.auth?._id, blog: req.params.id });
+
+                if (!document) {
+                    return res.status(404).json({ message: 'not found' });
+                }
+
+                document.set({ ...req.body });
+
+                await document.save();
+
+                res.locals.data = document;
             } catch (error) {
                 logging.error(error);
 

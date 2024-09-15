@@ -1,8 +1,16 @@
-import mongoose, { Schema } from 'mongoose';
+import mongoose, { Schema, Document } from 'mongoose';
+import { Blog } from './blog';
+import { Comment } from './comment';
 import bcrypt from 'bcrypt';
 
 const SALT_WORK_FACTOR = 10;
 
+interface IUser extends Document {
+    username: string;
+    email: string;
+    password: string;
+    name: string;
+}
 export const userSchema = new Schema(
     {
         username: {
@@ -29,9 +37,26 @@ userSchema.pre('save', async function save(next) {
         return next(err);
     }
 });
-
+// delete all associated posts
+userSchema.pre<IUser>('deleteOne', async function remove(next) {
+    try {
+        await Blog.deleteMany({ author: this._id });
+        next();
+    } catch (error: any) {
+        next(error);
+    }
+});
+// delete all associated comments
+userSchema.pre<IUser>('deleteOne', async function remove(next) {
+    try {
+        await Comment.deleteMany({ author: this._id });
+        next();
+    } catch (error: any) {
+        next(error);
+    }
+});
 userSchema.methods.validatePassword = async function validatePassword(data: string) {
     return bcrypt.compare(data, this.password);
 };
 
-export const User = mongoose.model('User', userSchema);
+export const User = mongoose.model<IUser>('User', userSchema);

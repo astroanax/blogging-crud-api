@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from 'express';
-import { AnyZodObject } from 'zod';
 import * as _ from 'lodash';
 
 export function Validate<T = any>(schema: any, params: boolean = false) {
@@ -22,7 +21,7 @@ export function Validate<T = any>(schema: any, params: boolean = false) {
     };
 }
 
-export function ValidateOut<T = any>(schema: any, array: boolean) {
+export function ValidateOut<T = any>(schema: any, array: boolean = false) {
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
         const originalMethod = descriptor.value;
         descriptor.value = async function (req: Request, res: Response, next: NextFunction) {
