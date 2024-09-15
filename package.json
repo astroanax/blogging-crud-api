@@ -20,6 +20,7 @@
     "author": "Mohammed Rehan Tadpatri",
     "license": "AGPL-3.0-or-later",
     "devDependencies": {
+        "@commander-js/extra-typings": "^12.1.0",
         "@eslint/js": "^9.10.0",
         "@types/bcrypt": "^5.0.2",
         "@types/eslint__js": "^8.42.3",
@@ -27,6 +28,7 @@
         "@types/jsonwebtoken": "^9.0.6",
         "@types/lodash": "^4.17.7",
         "@types/node": "^22.5.5",
+        "commander-js": "0.0.1-security",
         "eslint": "^9.10.0",
         "prettier": "^3.3.3",
         "ts-node": "^10.9.2",
@@ -34,7 +36,9 @@
         "typescript-eslint": "^8.5.0"
     },
     "dependencies": {
+        "axios": "^1.7.7",
         "bcrypt": "^5.1.1",
+        "commander": "^12.1.0",
         "dotenv": "^16.4.5",
         "express": "^4.21.0",
         "express-jwt": "^8.4.1",
