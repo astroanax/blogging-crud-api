@@ -14,6 +14,7 @@ import { defineRoutes } from './modules/routes';
 
 import UserController from './controllers/user';
 import AuthController from './controllers/auth';
+import BlogController from './controllers/blog';
 
 export const application = express();
 export let httpServer: ReturnType<typeof http.createServer>;
@@ -37,7 +38,7 @@ export const Main = async () => {
     application.use(corsHandler);
 
     logging.log('defining user controller routing...');
-    defineRoutes([UserController, AuthController], application);
+    defineRoutes([UserController, AuthController, BlogController], application);
 
     logging.log('define routing errors...');
     application.use(routeNotFound);

@@ -3,13 +3,6 @@ import bcrypt from 'bcrypt';
 
 const SALT_WORK_FACTOR = 10;
 
-interface IUser extends mongoose.Document {
-    username: string;
-    email: string;
-    password: string;
-    name: string;
-}
-
 export const userSchema = new Schema(
     {
         username: {

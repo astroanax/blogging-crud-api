@@ -6,12 +6,12 @@ import { Validate, ValidateOut } from '../decorators/validate';
 import UserSchema from '../schemas/user';
 import AuthSchema from '../schemas/auth';
 import { User } from '../models/user';
-import { MongoGet } from '../decorators/mongoose/get';
-import { MongoGetAll } from '../decorators/mongoose/getAll';
-import { MongoDelete } from '../decorators/mongoose/delete';
-import { MongoQuery } from '../decorators/mongoose/query';
-import { MongoUpdate } from '../decorators/mongoose/update';
-import { MongoCreate } from '../decorators/mongoose/create';
+import { MongoGet } from '../decorators/mongoose/user/get';
+import { MongoGetAll } from '../decorators/mongoose/user/getAll';
+import { MongoDelete } from '../decorators/mongoose/user/delete';
+import { MongoQuery } from '../decorators/mongoose/user/query';
+import { MongoUpdate } from '../decorators/mongoose/user/update';
+import { MongoCreate } from '../decorators/mongoose/user/create';
 
 interface AuthRequest extends Request {
     auth?: any;
