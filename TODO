@@ -1,8 +1,8 @@
-* [PARTIAL]implement jwt auth
 * [DONE]implement proper id validation
 * [DONE]use proper types for auth requests
-* [PARTIAL]implement api for blogs posts
-* write openapi/swagger config
 * [DONE]relationships
-* cli for managing posts and users
-* [partial]aggregation pipelines
+* [PARTIAL]implement api for blogs posts
+* [PARTIAL]implement jwt auth
+* [PARTIAL]aggregation pipelines
+* [PARTIAL]cli for managing posts and users
+* write openapi/swagger config
