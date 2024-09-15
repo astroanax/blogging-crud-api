@@ -18,7 +18,8 @@ export const blogSchema = new Schema(
             maxLength: 50
         },
         content: { type: String, required: true, minLength: 10, maxLength: 2500 },
-        author: { type: Schema.Types.ObjectId, required: true, ref: 'User' }
+        author: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
+        comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }]
     },
     { timestamps: true }
 );

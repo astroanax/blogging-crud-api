@@ -21,6 +21,25 @@ export function Validate<T = any>(schema: any, params: boolean = false) {
     };
 }
 
+export function ValidateQuery<T = any>(schema: any) {
+    return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+        const originalMethod = descriptor.value;
+        descriptor.value = async function (req: Request, res: Response, next: NextFunction) {
+            try {
+                const target = req.query;
+                await schema.parseAsync(target);
+            } catch (error: any) {
+                logging.error('validation error');
+                logging.error(error);
+                return res.status(422).json({ errors: error });
+            }
+            return originalMethod.call(this, req, res, next);
+        };
+
+        return descriptor;
+    };
+}
+
 export function ValidateOut<T = any>(schema: any, array: boolean = false) {
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
         const originalMethod = descriptor.value;

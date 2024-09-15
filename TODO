@@ -5,4 +5,4 @@
 * write openapi/swagger config
 * [DONE]relationships
 * cli for managing posts and users
-* aggregation pipelines
+* [partial]aggregation pipelines

@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { IUser } from '../../../models/user';
 
 export function MongoFollow(model: Model<any>, action: string = 'follow') {
@@ -29,6 +29,44 @@ export function MongoFollow(model: Model<any>, action: string = 'follow') {
                 await User?.save();
 
                 res.locals.data = '';
+            } catch (error) {
+                logging.error(error);
+
+                return res.status(400).json(error);
+            }
+
+            return originalMethod.call(this, req, res, next);
+        };
+
+        return descriptor;
+    };
+}
+
+export function MongoFollowCount(model: Model<any>) {
+    return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+        const originalMethod = descriptor.value;
+
+        descriptor.value = async function (req: Request, res: Response, next: NextFunction) {
+            try {
+                const userFollowCount = await model.aggregate([
+                    {
+                        $match: { _id: new mongoose.Types.ObjectId(req.params.id) }
+                    },
+                    {
+                        $addFields: {
+                            followers: { $size: '$followers' },
+                            following: { $size: '$following' }
+                        }
+                    },
+                    {
+                        $project: {
+                            username: 1,
+                            followers: 1,
+                            following: 1
+                        }
+                    }
+                ]);
+                res.locals.data = userFollowCount;
             } catch (error) {
                 logging.error(error);
 

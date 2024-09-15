@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { Controller } from '../decorators/controller';
 import { Route } from '../decorators/route';
 import { Authenticated } from '../decorators/jwt';
-import { Validate, ValidateOut } from '../decorators/validate';
+import { Validate, ValidateQuery, ValidateOut } from '../decorators/validate';
 import UserSchema from '../schemas/user';
 import AuthSchema from '../schemas/auth';
 import { JwtPayload } from 'jsonwebtoken';
@@ -13,7 +13,8 @@ import { MongoDelete } from '../decorators/mongoose/user/delete';
 import { MongoQuery } from '../decorators/mongoose/user/query';
 import { MongoUpdate } from '../decorators/mongoose/user/update';
 import { MongoCreate } from '../decorators/mongoose/user/create';
-import { MongoFollow } from '../decorators/mongoose/user/follow';
+import { MongoFollow, MongoFollowCount } from '../decorators/mongoose/user/follow';
+import { MongoFullActivity, MongoGetTopUsers } from '../decorators/mongoose/user/pipelines';
 
 @Controller('/users')
 class UserController {
@@ -22,6 +23,13 @@ class UserController {
     @ValidateOut(UserSchema.Read, true)
     getAll(req: Request, res: Response, next: NextFunction) {
         return res.status(200).json(res.locals.data);
+    }
+
+    @Route('get', '/top/')
+    @ValidateQuery(UserSchema.TopQuery)
+    @MongoGetTopUsers(User)
+    getTopUsers(req: Request, res: Response, next: NextFunction) {
+        return res.json(res.locals.data);
     }
 
     @Route('get', '/:id')
@@ -88,6 +96,20 @@ class UserController {
     @MongoFollow(User, 'remove')
     removeFollow(req: Request, res: Response, next: NextFunction) {
         return res.status(204).json();
+    }
+
+    @Route('get', '/followers/:id')
+    @Validate(UserSchema.Id, true)
+    @MongoFollowCount(User)
+    followCount(req: Request, res: Response, next: NextFunction) {
+        return res.json(res.locals.data);
+    }
+
+    @Route('get', '/fullactivity/:id')
+    @Validate(UserSchema.Id, true)
+    @MongoFullActivity(User)
+    fullActivity(req: Request, res: Response, next: NextFunction) {
+        return res.json(res.locals.data);
     }
 }
 
