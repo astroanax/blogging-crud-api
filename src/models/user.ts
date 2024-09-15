@@ -5,11 +5,13 @@ import bcrypt from 'bcrypt';
 
 const SALT_WORK_FACTOR = 10;
 
-interface IUser extends Document {
+export interface IUser extends Document {
     username: string;
     email: string;
     password: string;
     name: string;
+    following: mongoose.Types.ObjectId[];
+    followers: mongoose.Types.ObjectId[];
 }
 export const userSchema = new Schema(
     {
@@ -22,7 +24,9 @@ export const userSchema = new Schema(
         },
         email: { type: String, required: true, unique: true },
         password: { type: String, required: true },
-        name: { type: String, required: true, minLength: 3, maxLength: 30 }
+        name: { type: String, required: true, minLength: 3, maxLength: 30 },
+        following: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+        followers: [{ type: Schema.Types.ObjectId, ref: 'User' }]
     },
     { timestamps: true }
 );
@@ -50,6 +54,18 @@ userSchema.post('findOneAndDelete', async function remove(doc, next) {
 userSchema.post('findOneAndDelete', async function remove(doc, next) {
     try {
         await Comment.deleteMany({ author: doc._id });
+        next();
+    } catch (error: any) {
+        next(error);
+    }
+});
+// delete all relations with users
+userSchema.post('findOneAndDelete', async function remove(doc, next) {
+    try {
+        // remove my followers
+        await User.updateMany({ following: doc._id }, { $pull: { following: doc._id } });
+        // unfollow others
+        await User.updateMany({ followers: doc._id }, { $pull: { followers: doc._id } });
         next();
     } catch (error: any) {
         next(error);

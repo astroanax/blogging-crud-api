@@ -13,6 +13,7 @@ import { MongoDelete } from '../decorators/mongoose/user/delete';
 import { MongoQuery } from '../decorators/mongoose/user/query';
 import { MongoUpdate } from '../decorators/mongoose/user/update';
 import { MongoCreate } from '../decorators/mongoose/user/create';
+import { MongoFollow } from '../decorators/mongoose/user/follow';
 
 @Controller('/users')
 class UserController {
@@ -63,6 +64,30 @@ class UserController {
     remove(req: Request, res: Response, next: NextFunction) {
         if (req.auth?._id != req.params.id) return res.status(401);
         return res.status(204).json({});
+    }
+
+    @Route('put', '/follow/:id')
+    @Authenticated()
+    @Validate(UserSchema.Id, true)
+    @MongoFollow(User, 'follow')
+    follow(req: Request, res: Response, next: NextFunction) {
+        return res.status(201).json();
+    }
+
+    @Route('delete', '/follow/:id')
+    @Authenticated()
+    @Validate(UserSchema.Id, true)
+    @MongoFollow(User, 'unfollow')
+    unfollow(req: Request, res: Response, next: NextFunction) {
+        return res.status(204).json();
+    }
+
+    @Route('delete', '/follower/:id')
+    @Authenticated()
+    @Validate(UserSchema.Id, true)
+    @MongoFollow(User, 'remove')
+    removeFollow(req: Request, res: Response, next: NextFunction) {
+        return res.status(204).json();
     }
 }
 
