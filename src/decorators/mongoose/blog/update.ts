@@ -5,9 +5,9 @@ export function MongoUpdate(model: Model<any>) {
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
         const originalMethod = descriptor.value;
 
-        descriptor.value = async function (req: any, res: Response, next: NextFunction) {
+        descriptor.value = async function (req: Request, res: Response, next: NextFunction) {
             try {
-                const document = await model.findById(req.params.id, req.auth._id);
+                const document = await model.findById(req.params.id, req.auth?._id);
 
                 if (!document) {
                     return res.status(404).json({ message: 'not found' });

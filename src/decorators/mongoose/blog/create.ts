@@ -5,11 +5,11 @@ export function MongoCreate(model: Model<any>) {
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
         const originalMethod = descriptor.value;
 
-        descriptor.value = async function (req: any, res: Response, next: NextFunction) {
+        descriptor.value = async function (req: Request, res: Response, next: NextFunction) {
             try {
                 const document = new model({
                     _id: new mongoose.Types.ObjectId(),
-                    author: req.auth._id,
+                    author: req.auth?._id,
                     ...req.body
                 });
 

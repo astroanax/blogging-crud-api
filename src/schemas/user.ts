@@ -28,4 +28,8 @@ const Read = z.object({
 
 const Update = Create.omit({ password: true }).partial();
 
-export default { Create, Read, Update };
+const Id = z.object({
+    id: z.string().regex(/^[a-f\d]{24}$/i)
+});
+
+export default { Create, Read, Update, Id };

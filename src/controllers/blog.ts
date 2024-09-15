@@ -12,10 +12,6 @@ import { MongoDelete } from '../decorators/mongoose/blog/delete';
 import { MongoUpdate } from '../decorators/mongoose/blog/update';
 import { MongoCreate } from '../decorators/mongoose/blog/create';
 
-interface AuthRequest extends Request {
-    auth?: any;
-}
-
 @Controller('/posts')
 class BlogController {
     @Route('get', '/all')
@@ -26,6 +22,7 @@ class BlogController {
     }
 
     @Route('get', '/:id')
+    @Validate(BlogSchema.Id, true)
     @MongoGet(Blog)
     @ValidateOut(BlogSchema.Read, false)
     get(req: Request, res: Response, next: NextFunction) {
@@ -43,17 +40,19 @@ class BlogController {
 
     @Route('patch', '/:id')
     @Authenticated()
+    @Validate(BlogSchema.Id, true)
     @Validate(BlogSchema.Update)
     @MongoUpdate(Blog)
     @ValidateOut(BlogSchema.Read, false)
-    update(req: AuthRequest, res: Response, next: NextFunction) {
+    update(req: Request, res: Response, next: NextFunction) {
         return res.status(201).json(res.locals.data);
     }
 
     @Route('delete', '/:id')
     @Authenticated()
+    @Validate(BlogSchema.Id, true)
     @MongoDelete(Blog)
-    remove(req: AuthRequest, res: Response, next: NextFunction) {
+    remove(req: Request, res: Response, next: NextFunction) {
         return res.status(204).json({});
     }
 }

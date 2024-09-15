@@ -5,9 +5,9 @@ export function MongoDelete(model: Model<any>) {
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
         const originalMethod = descriptor.value;
 
-        descriptor.value = async function (req: any, res: Response, next: NextFunction) {
+        descriptor.value = async function (req: Request, res: Response, next: NextFunction) {
             try {
-                const document = await model.findOneAndDelete({ _id: req.params.id, author: req.auth._id });
+                const document = await model.findOneAndDelete({ _id: req.params.id, author: req.auth?._id });
 
                 if (!document) return res.sendStatus(404);
             } catch (error) {

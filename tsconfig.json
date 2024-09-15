@@ -13,5 +13,5 @@
         "module": "Node16"
     },
     "exclude": ["node_modules/"],
-    "include": ["src/**/*.ts"]
+    "include": ["src/**/*.ts", "types/*.d.ts"]
 }
