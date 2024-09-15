@@ -1,8 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
 import { Controller } from '../decorators/controller';
 import { Route } from '../decorators/route';
+import { Authenticated } from '../decorators/jwt';
 import { Validate, ValidateOut } from '../decorators/validate';
 import UserSchema from '../schemas/user';
+import AuthSchema from '../schemas/auth';
 import { User } from '../models/user';
 import { MongoGet } from '../decorators/mongoose/get';
 import { MongoGetAll } from '../decorators/mongoose/getAll';
@@ -11,23 +13,27 @@ import { MongoQuery } from '../decorators/mongoose/query';
 import { MongoUpdate } from '../decorators/mongoose/update';
 import { MongoCreate } from '../decorators/mongoose/create';
 
+interface AuthRequest extends Request {
+    auth?: any;
+}
+
 @Controller('/users')
 class UserController {
-    @Route('get', '/get/all')
+    @Route('get', '/all')
     @MongoGetAll(User)
     @ValidateOut(UserSchema.Read, true)
     getAll(req: Request, res: Response, next: NextFunction) {
         return res.status(200).json(res.locals.data);
     }
 
-    @Route('get', '/get/:id')
+    @Route('get', '/:id')
     @MongoGet(User)
     @ValidateOut(UserSchema.Read, false)
     get(req: Request, res: Response, next: NextFunction) {
         return res.status(200).json(res.locals.data);
     }
 
-    @Route('post', '/create')
+    @Route('post', '/new')
     @Validate(UserSchema.Create)
     @MongoCreate(User)
     @ValidateOut(UserSchema.Read, false)
@@ -35,23 +41,27 @@ class UserController {
         return res.status(201).json(res.locals.data);
     }
 
-    @Route('post', '/query')
-    @MongoQuery(User)
-    query(req: Request, res: Response, next: NextFunction) {
-        return res.status(200).json(req.mongoQuery);
-    }
+    //@Route('post', '/query')
+    //@MongoQuery(User)
+    //query(req: Request, res: Response, next: NextFunction) {
+    //    return res.status(200).json(req.mongoQuery);
+    //}
 
-    @Route('patch', '/update/:id')
+    @Route('patch', '/:id')
+    @Authenticated()
     @Validate(UserSchema.Update)
     @MongoUpdate(User)
     @ValidateOut(UserSchema.Read, false)
-    update(req: Request, res: Response, next: NextFunction) {
+    update(req: AuthRequest, res: Response, next: NextFunction) {
+        if (req.auth._id != req.params.id) return res.status(401);
         return res.status(201).json(res.locals.data);
     }
 
-    @Route('delete', '/delete/:id')
+    @Route('delete', '/:id')
+    @Authenticated()
     @MongoDelete(User)
-    remove(req: Request, res: Response, next: NextFunction) {
+    remove(req: AuthRequest, res: Response, next: NextFunction) {
+        if (req.auth._id != req.params.id) return res.status(401);
         return res.status(204).json({});
     }
 }

@@ -3,6 +3,13 @@ import bcrypt from 'bcrypt';
 
 const SALT_WORK_FACTOR = 10;
 
+interface IUser extends mongoose.Document {
+    username: string;
+    email: string;
+    password: string;
+    name: string;
+}
+
 export const userSchema = new Schema(
     {
         username: {
@@ -29,5 +36,9 @@ userSchema.pre('save', async function save(next) {
         return next(err);
     }
 });
+
+userSchema.methods.validatePassword = async function validatePassword(data: string) {
+    return bcrypt.compare(data, this.password);
+};
 
 export const User = mongoose.model('User', userSchema);
