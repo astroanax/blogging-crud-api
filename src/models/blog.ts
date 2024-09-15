@@ -23,9 +23,9 @@ export const blogSchema = new Schema(
     { timestamps: true }
 );
 // delete all associated comments
-blogSchema.pre<IBlog>('deleteOne', async function remove(next) {
+blogSchema.post(['findOneAndDelete', 'deleteMany'], async function remove(doc, next) {
     try {
-        await Comment.deleteMany({ blog: this._id });
+        await Comment.deleteMany({ blog: doc._id });
         next();
     } catch (error: any) {
         next(error);

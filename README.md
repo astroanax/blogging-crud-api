@@ -13,7 +13,7 @@ The docs felt incomplete, even with the vast majority of users, so did the dev e
 
 Express doesn't have request or response validation (-10000 aura). why? can't say speed or some other reason because according to [this](https://www.techempower.com/benchmarks/#hw=ph&test=fortune&section=data-r22) benchmark, express-mongodb stands at 365, while fastapi-uvicorn stands at 306. Ha
 
-And mongodb/mongoose is weird, just to reiterate, has bad docs. SQLAlchemy seemed so much better documented.
+And mongodb/mongoose is weird, just to reiterate, has bad docs. SQLAlchemy seemed so much better documented. Hooks and their behaviour are practically [undocumented](https://mongoosejs.com/docs/search.html?q=pre)
 
 ### actual details
 

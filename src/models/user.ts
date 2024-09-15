@@ -38,18 +38,18 @@ userSchema.pre('save', async function save(next) {
     }
 });
 // delete all associated posts
-userSchema.pre<IUser>('deleteOne', async function remove(next) {
+userSchema.post('findOneAndDelete', async function remove(doc, next) {
     try {
-        await Blog.deleteMany({ author: this._id });
+        await Blog.deleteMany({ author: doc._id });
         next();
     } catch (error: any) {
         next(error);
     }
 });
 // delete all associated comments
-userSchema.pre<IUser>('deleteOne', async function remove(next) {
+userSchema.post('findOneAndDelete', async function remove(doc, next) {
     try {
-        await Comment.deleteMany({ author: this._id });
+        await Comment.deleteMany({ author: doc._id });
         next();
     } catch (error: any) {
         next(error);
